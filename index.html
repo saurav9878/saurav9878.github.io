@@ -29,6 +29,17 @@
    }
  }
 </script>
+ <input id="vol-control" type="range" min="0" max="100" step="1" oninput="SetVolume(this.value)" onchange="SetVolume(this.value)"></input>
+
+<script>
+    function SetVolume(val)
+    {
+        var player = document.getElementById('video');
+        console.log('Before: ' + player.volume);
+        player.volume = val / 100;
+        console.log('After: ' + player.volume);
+    }
+</script>
 <body>
 
 <p><video src="http://dl.lavinmovie.net/series/The%20Vampire%20Diaries/S04/720p/The.Vampire.Diaries.S04E01.BluRay.720p.Pahe-LavinMovie.mkv" type='video/x-matroska'; codecs="theora, vorbis"' autoplay controls onerror="failed(event)" ></video></p>
