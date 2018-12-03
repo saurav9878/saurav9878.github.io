@@ -1,8 +1,38 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+ <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+ <meta name="author" content="GLDGN" />
+
+ <title>Untitled 1</title>
+</head>
+<script>
+ function failed(e) {
+   // video playback failed - show a message saying why
+   switch (e.target.error.code) {
+     case e.target.error.MEDIA_ERR_ABORTED:
+       alert('You aborted the video playback.');
+       break;
+     case e.target.error.MEDIA_ERR_NETWORK:
+       alert('A network error caused the video download to fail part-way.');
+       break;
+     case e.target.error.MEDIA_ERR_DECODE:
+       alert('The video playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+       break;
+     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+       alert('The video could not be loaded, either because the server or network failed or because the format is not supported.');
+       break;
+     default:
+       alert('An unknown error occurred.');
+       break;
+   }
+ }
+</script>
 <body>
- <embed id="divxplayer" type="video/divx" width="1024" height="768" 
-src ="http://dl.lavinmovie.net/series/The%20Vampire%20Diaries/S04/1080p%20x265/The.Vampire.Diaries.S04E01.BluRay.REMUX.x265.HEVC.1080p.DD5.1.D3G-LavinMovie.mkv" autoPlay=\"true\" 
-pluginspage=\"http://go.divx.com/plugin/download/\"></embed>
- </body>
+
+<p><video src="http://79.127.126.110/Serial/The%20Vampire%20Diaries/S01/Vpr.Dres_S01.E01.mkv" type='video/x-matroska; codecs="theora, vorbis"' autoplay controls onerror="failed(event)" ></video></p>
+<p><a href="http://dl.lavinmovie.net/series/The%20Vampire%20Diaries/S04/1080p%20x265/The.Vampire.Diaries.S04E01.BluRay.REMUX.x265.HEVC.1080p.DD5.1.D3G-LavinMovie.mkv">Download the video file</a>.</p>
+
+</body>
 </html>
