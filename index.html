@@ -1,38 +1,39 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html>
+  <head>
+       <link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+      <script src="http://vjs.zencdn.net/4.12/video.js"></script>
+      <style type="text/css">
+        .vjs-default-skin .vjs-play-progress,
+        .vjs-default-skin .vjs-volume-level { background-color: #ff0000 }
+        .vjs-default-skin .vjs-control-bar,
+        .vjs-default-skin .vjs-big-play-button { background: rgba(0,0,0,0.7) }
+        .vjs-default-skin .vjs-slider { background: rgba(0,0,0,0.2333333333333333) }
+        .vjs-default-skin .vjs-control-bar { font-size: 200% }
+      </style>
+  </head>
+<body> 
+    <form>
+      Type the Link: <input type="text" name="videolink" id="vlink">
+      <input type="button" value="Play Video" onclick="changelink();">
+    </form>
+    <br/>
+    <video id='my-video' class='video-js vjs-default-skin vjs-big-play-centered' controls autoplay preload='auto' width="1280" height="720"  data-setup='{}'>
+    <source id='cvid' src='http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' type='video/mp4'>
+    <p class='vjs-no-js'>
+      To view this video please enable JavaScript, and consider upgrading to a web browser that
+      <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+    </p>
+  </video>
 
-<head>
- <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
- <meta name="author" content="GLDGN" />
-
- <title>Untitled 1</title>
-</head>
-<script>
- function failed(e) {
-   // video playback failed - show a message saying why
-   switch (e.target.error.code) {
-     case e.target.error.MEDIA_ERR_ABORTED:
-       alert('You aborted the video playback.');
-       break;
-     case e.target.error.MEDIA_ERR_NETWORK:
-       alert('A network error caused the video download to fail part-way.');
-       break;
-     case e.target.error.MEDIA_ERR_DECODE:
-       alert('The video playback was aborted due to a corruption problem or because the video used features your browser did not support.');
-       break;
-     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-       alert('The video could not be loaded, either because the server or network failed or because the format is not supported.');
-       break;
-     default:
-       alert('An unknown error occurred.');
-       break;
-   }
- }
-</script>
-<body>
-
-<p><video src="http://dl.lavinmovie.net/series/The%20Vampire%20Diaries/S04/720p/The.Vampire.Diaries.S04E03.BluRay.720p.Pahe-LavinMovie.mkv" type='video/x-matroska'; codecs="theora, vorbis"' autoplay controls onerror="failed(event)" ></video></p>
-<p><a href="http://dl.lavinmovie.net/series/The%20Vampire%20Diaries/S04/720p/The.Vampire.Diaries.S04E01.BluRay.720p.Pahe-LavinMovie.mkv">Download the video file</a>.</p>
-
-</body>
+  <script src='https://vjs.zencdn.net/7.6.0/video.js'></script>
+    <script>
+        var Cvid = document.getElementById('cvid');
+        var Vid = document.getElementById('my-video_html5_api');
+        var Vlink = document.getElementById('vlink');
+        function changelink(){
+            Cvid.setAttribute('src',Vlink.value);
+            Vid.load();
+          }
+      </script>
+  </body>
 </html>
