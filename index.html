@@ -4,98 +4,221 @@
       <script src="https://vjs.zencdn.net/4.12/video.js"></script>
       <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
       <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-      <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" integrity="sha384-YfvzUzQJYQJYQJYQJYQJYQJYQJYQJYQJYQJYQJYQJYQJYQJYQJYQJYQJYQJYQJY" crossorigin="anonymous"></script>
       <style type="text/css">
-        .vjs-default-skin .vjs-play-progress,
-        .vjs-default-skin .vjs-volume-level { background-color: #ff0000 }
-        .vjs-default-skin .vjs-control-bar,
-        .vjs-default-skin .vjs-big-play-button { background: rgba(0,0,0,0.7) }
-        .vjs-default-skin .vjs-slider { background: rgba(0,0,0,0.2333333333333333) }
-        .vjs-default-skin .vjs-control-bar { font-size: 200% }
+        body {
+          margin: 0;
+          padding: 0;
+          background: #0f0f0f;
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+          overflow-x: hidden;
+        }
         
-        /* Chat styles */
+        .container {
+          width: 100%;
+          max-width: 1800px;
+          padding: 16px;
+          box-sizing: border-box;
+        }
+
         .video-container {
           display: flex;
-          gap: 20px;
-          max-width: 1600px;
-          margin: 0 auto;
+          gap: 16px;
+          background: transparent;
+          border-radius: 12px;
+          padding: 0;
+          box-shadow: none;
+          width: 100%;
+          height: calc(100vh - 32px);
+          max-height: 720px;
+        }
+        
+        .video-wrapper {
+          flex: 1;
+          min-width: 0;
+          background: transparent;
+          position: relative;
+          aspect-ratio: 16/9;
+        }
+
+        .video-form {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          margin: 0;
+          z-index: 1;
+          transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .video-form.hidden {
+          opacity: 0;
+          transform: translateY(-20px);
+          pointer-events: none;
+        }
+
+        .video-form input[type="text"] {
+          flex: 1;
+          padding: 12px 15px;
+          border: none;
+          border-radius: 6px;
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          font-size: 14px;
+          transition: all 0.3s ease;
+        }
+
+        .video-form input[type="button"] {
+          padding: 12px 20px;
+          border: none;
+          border-radius: 6px;
+          background: #00a884;
+          color: white;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+
+        .video-form input[type="button"]:hover {
+          background: #008f74;
         }
         
         .chat-container {
-          width: 300px;
-          background: rgba(0,0,0,0.7);
-          border-radius: 8px;
+          width: 360px;
+          min-width: 360px;
+          background: #0f0f0f;
+          border-radius: 12px;
           display: flex;
           flex-direction: column;
-          height: 720px;
+          height: 100%;
+          position: relative;
+          border-left: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .chat-messages {
           flex-grow: 1;
           overflow-y: auto;
-          padding: 10px;
-          color: white;
+          padding: 16px;
+          background: transparent;
+          border-radius: 0;
+          /* Hide scrollbar for Chrome, Safari and Opera */
+          &::-webkit-scrollbar {
+            display: none;
+          }
+          /* Hide scrollbar for IE, Edge and Firefox */
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
         }
         
         .chat-input {
           display: flex;
-          padding: 10px;
-          background: rgba(0,0,0,0.8);
-          border-radius: 0 0 8px 8px;
+          padding: 12px;
+          background: #0f0f0f;
+          border-radius: 0;
+          gap: 8px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .chat-input input {
           flex-grow: 1;
-          padding: 8px;
-          border: none;
-          border-radius: 4px;
-          margin-right: 10px;
+          padding: 10px 12px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          background: rgba(255, 255, 255, 0.05);
+          color: white;
+          font-size: 14px;
         }
         
         .chat-input button {
-          padding: 8px 16px;
-          background: #ff0000;
-          color: white;
+          padding: 10px 16px;
           border: none;
-          border-radius: 4px;
+          border-radius: 20px;
+          background: #0f0f0f;
+          color: #3ea6ff;
+          font-weight: 500;
           cursor: pointer;
+          transition: background-color 0.2s;
+        }
+
+        .chat-input button:hover {
+          background: rgba(62, 166, 255, 0.1);
         }
         
         .message {
-          margin-bottom: 10px;
-          padding: 8px;
-          background: rgba(255,255,255,0.1);
-          border-radius: 4px;
+          margin-bottom: 16px;
+          display: flex;
+          flex-direction: column;
+          max-width: 100%;
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.sent {
+          align-self: flex-end;
+          background: transparent;
+          border-radius: 0;
+          padding: 0;
+          margin-left: auto;
+        }
+        
+        .message.received {
+          align-self: flex-start;
+          background: transparent;
+          border-radius: 0;
+          padding: 0;
+          margin-right: auto;
         }
         
         .message .sender {
-          font-weight: bold;
-          color: #ff0000;
-          margin-right: 5px;
+          font-weight: 500;
+          color: #3ea6ff;
+          margin-bottom: 4px;
+          font-size: 0.9em;
+        }
+        
+        .message .text {
+          color: white;
+          word-wrap: break-word;
+          line-height: 1.4;
         }
         
         .message .time {
-          font-size: 0.8em;
-          color: #ccc;
+          font-size: 0.75em;
+          color: #aaaaaa;
+          text-align: right;
+          margin-top: 4px;
         }
 
         .typing-indicator {
-          padding: 8px;
-          color: #ccc;
+          padding: 8px 12px;
+          color: #aaaaaa;
           font-style: italic;
           font-size: 0.9em;
+          background: transparent;
+          border-radius: 0;
+          margin: 0 0 8px;
+          display: inline-block;
         }
 
         .emoji-picker {
           position: absolute;
-          bottom: 50px;
-          right: 10px;
-          background: rgba(0,0,0,0.9);
-          padding: 10px;
-          border-radius: 8px;
+          bottom: 60px;
+          right: 12px;
+          background: #0f0f0f;
+          padding: 12px;
+          border-radius: 12px;
           display: none;
-          max-height: 200px;
+          max-height: 250px;
           overflow-y: auto;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .emoji-picker.show {
@@ -105,58 +228,149 @@
         .emoji-button {
           background: none;
           border: none;
-          color: white;
-          font-size: 1.2em;
+          color: #aaaaaa;
+          font-size: 1.4em;
           cursor: pointer;
-          padding: 5px;
+          padding: 8px;
+          transition: color 0.2s;
+        }
+
+        .emoji-button:hover {
+          color: #3ea6ff;
         }
 
         .emoji-grid {
           display: grid;
           grid-template-columns: repeat(8, 1fr);
-          gap: 5px;
+          gap: 8px;
         }
 
         .emoji-item {
           cursor: pointer;
-          padding: 5px;
+          padding: 8px;
           text-align: center;
-          font-size: 1.2em;
+          font-size: 1.4em;
+          transition: all 0.2s;
+          border-radius: 6px;
         }
 
         .emoji-item:hover {
-          background: rgba(255,255,255,0.1);
-          border-radius: 4px;
+          background: rgba(255, 255, 255, 0.1);
+          transform: scale(1.1);
+        }
+
+        /* Video player customizations */
+        .video-js {
+          width: 100%;
+          height: 100%;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+
+        #my-video {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+
+        .vjs-default-skin .vjs-play-progress,
+        .vjs-default-skin .vjs-volume-level { 
+          background-color: #3ea6ff;
+        }
+
+        .vjs-default-skin .vjs-control-bar,
+        .vjs-default-skin .vjs-big-play-button { 
+          background: rgba(0, 0, 0, 0.7);
+        }
+
+        .vjs-default-skin .vjs-slider { 
+          background: rgba(255, 255, 255, 0.2);
+        }
+
+        .vjs-default-skin .vjs-control-bar { 
+          font-size: 110%;
+        }
+
+        .vjs-default-skin .vjs-big-play-button {
+          border-color: #3ea6ff;
+        }
+
+        .vjs-default-skin:hover .vjs-big-play-button,
+        .vjs-default-skin .vjs-big-play-button:focus {
+          background-color: #3ea6ff;
+        }
+
+        .toggle-url {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: rgba(255, 255, 255, 0.1);
+          border: none;
+          color: white;
+          padding: 8px 12px;
+          border-radius: 6px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          transition: all 0.3s ease;
+        }
+
+        .toggle-url:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+
+        .toggle-url i {
+          font-size: 16px;
+        }
+
+        @media (max-width: 1400px) {
+          .chat-container {
+            width: 320px;
+            min-width: 320px;
+          }
+        }
+
+        @media (max-width: 1200px) {
+          .chat-container {
+            width: 280px;
+            min-width: 280px;
+          }
         }
       </style>
   </head>
 <body> 
-    <div class="video-container">
-      <div>
-        <form>
-          Type the Link: <input type="text" name="videolink" id="vlink">
-          <input type="button" value="Play Video" onclick="changelink();">
-        </form>
-        <br/>
-        <video id='my-video' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto' width="1280" height="720" data-setup='{}'>
-        <source id='cvid' src='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' type='video/mp4'>
-        <p class='vjs-no-js'>
-          To view this video please enable JavaScript, and consider upgrading to a web browser that
-          <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
-        </p>
-      </video>
-      </div>
-      
-      <div class="chat-container">
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="typing-indicator" id="typingIndicator"></div>
-        <div class="chat-input">
-          <input type="text" id="chatInput" placeholder="Type a message...">
-          <button class="emoji-button" onclick="toggleEmojiPicker()">😊</button>
-          <button onclick="sendMessage()">Send</button>
+    <div class="container">
+      <div class="video-container">
+        <div class="video-wrapper">
+          <button class="toggle-url" onclick="toggleUrlForm()">
+            <i>🔗</i> URL
+          </button>
+          <form class="video-form" id="urlForm">
+            <input type="text" name="videolink" id="vlink" placeholder="Enter video URL...">
+            <input type="button" value="Play Video" onclick="changelink();">
+          </form>
+          <video id='my-video' class='video-js vjs-default-skin vjs-big-play-centered' controls preload='auto' width="1280" height="720" data-setup='{}'>
+            <source id='cvid' src='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' type='video/mp4'>
+            <p class='vjs-no-js'>
+              To view this video please enable JavaScript, and consider upgrading to a web browser that
+              <a href='https://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a>
+            </p>
+          </video>
         </div>
-        <div class="emoji-picker" id="emojiPicker">
-          <div class="emoji-grid" id="emojiGrid"></div>
+        
+        <div class="chat-container">
+          <div class="chat-messages" id="chatMessages"></div>
+          <div class="typing-indicator" id="typingIndicator"></div>
+          <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Type a message...">
+            <button class="emoji-button" onclick="toggleEmojiPicker()">😊</button>
+            <button onclick="sendMessage()">Send</button>
+          </div>
+          <div class="emoji-picker" id="emojiPicker">
+            <div class="emoji-grid" id="emojiGrid"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -177,10 +391,24 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
-    // Add connection state logging
+    // Add detailed connection state logging
     database.ref('.info/connected').on('value', (snap) => {
       console.log('Firebase connected:', snap.val());
+      if (snap.val() === true) {
+        console.log('Firebase connection successful');
+      } else {
+        console.error('Firebase connection failed');
+      }
     });
+
+    // Check Firebase database rules
+    database.ref('chat').once('value')
+      .then((snapshot) => {
+        console.log('Chat reference accessible:', snapshot.exists());
+      })
+      .catch((error) => {
+        console.error('Error accessing chat reference:', error);
+      });
 
     var Cvid = document.getElementById('cvid');
     var player = videojs('my-video');
@@ -193,6 +421,7 @@
     
     // Generate a random user ID for this session
     const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+    console.log('User ID:', userId);
     
     // Reference to the video state in Firebase
     const videoStateRef = database.ref('videoState');
@@ -200,15 +429,206 @@
     const chatRef = database.ref('chat');
     // Reference to typing status
     const typingRef = database.ref('typing');
+
+    // Test Firebase write permission
+    chatRef.push({
+      test: 'connection_test',
+      timestamp: firebase.database.ServerValue.TIMESTAMP
+    }).then(() => {
+      console.log('Firebase write test successful');
+    }).catch((error) => {
+      console.error('Firebase write test failed:', error);
+    });
     
-    // Common emojis to display
+    // Listen for new chat messages with error handling
+    chatRef.on('child_added', (snapshot) => {
+      try {
+        const message = snapshot.val();
+        console.log('New message received:', message);
+        if (message && message.text) {
+          addMessageToChat(message);
+        } else {
+          console.error('Invalid message format:', message);
+        }
+      } catch (error) {
+        console.error('Error processing message:', error);
+      }
+    }, (error) => {
+      console.error('Error listening to messages:', error);
+    });
+    
+    function addMessageToChat(message) {
+      try {
+        console.log('Adding message to chat:', message);
+        const messageElement = document.createElement('div');
+        messageElement.className = `message ${message.sender === userId ? 'sent' : 'received'}`;
+        
+        // Parse emojis in the message with fallback
+        let parsedText = message.text;
+        try {
+          if (typeof twemoji !== 'undefined') {
+            parsedText = twemoji.parse(message.text, {
+              folder: 'svg',
+              ext: '.svg'
+            });
+          }
+        } catch (emojiError) {
+          console.warn('Emoji parsing failed, using plain text:', emojiError);
+        }
+        
+        messageElement.innerHTML = `
+          ${message.sender !== userId ? `<span class="sender">${message.sender}</span>` : ''}
+          <span class="text">${parsedText}</span>
+          <span class="time">${new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+        `;
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      } catch (error) {
+        console.error('Error adding message to chat:', error);
+      }
+    }
+    
+    function sendMessage() {
+      const text = chatInput.value.trim();
+      console.log('Attempting to send message:', text);
+      if (text) {
+        const messageData = {
+          text,
+          sender: userId,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+        
+        console.log('Message data:', messageData);
+        
+        chatRef.push(messageData)
+          .then(() => {
+            console.log('Message sent successfully');
+            chatInput.value = '';
+            
+            // Mark user as not typing
+            typingRef.child(userId).set({
+              typing: false,
+              timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+          })
+          .catch((error) => {
+            console.error('Error sending message:', error);
+            alert('Failed to send message. Please check console for details.');
+          });
+      }
+    }
+    
+    // Allow sending message with Enter key
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+    
+    // Listen for changes in video state and URL
+    videoStateRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      console.log('Received sync data:', data);
+      if (data) {
+        // Sync URL if different
+        if (data.currentUrl && data.currentUrl !== Vlink.value) {
+          console.log('Syncing URL to:', data.currentUrl);
+          Vlink.value = data.currentUrl;
+          Cvid.setAttribute('src', data.currentUrl);
+          player.src({ type: 'video/mp4', src: data.currentUrl });
+          player.load();
+        }
+
+        // Only update if the change is from another client
+        if (Math.abs(player.currentTime() - data.currentTime) > 1) {
+          console.log('Syncing time to:', data.currentTime);
+          player.currentTime(data.currentTime);
+        }
+        
+        if (data.isPlaying && player.paused()) {
+          console.log('Syncing play state');
+          player.play();
+        } else if (!data.isPlaying && !player.paused()) {
+          console.log('Syncing pause state');
+          player.pause();
+        }
+      }
+    });
+
+    // Add this new function to handle URL bar visibility
+    function toggleUrlBarVisibility(isPlaying) {
+      const form = document.getElementById('urlForm');
+      if (isPlaying) {
+        form.classList.add('hidden');
+      } else {
+        form.classList.remove('hidden');
+      }
+    }
+
+    // Update Firebase when video state changes
+    player.on('play', () => {
+      videoStateRef.update({
+        isPlaying: true,
+        currentTime: player.currentTime(),
+        currentUrl: Vlink.value,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+      toggleUrlBarVisibility(true);
+    });
+
+    player.on('pause', () => {
+      videoStateRef.update({
+        isPlaying: false,
+        currentTime: player.currentTime(),
+        currentUrl: Vlink.value,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+      toggleUrlBarVisibility(false);
+    });
+
+    player.on('seeked', () => {
+      videoStateRef.update({
+        currentTime: player.currentTime(),
+        currentUrl: Vlink.value,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+    });
+
+    player.on('timeupdate', () => {
+      // Only update if the video is playing
+      if (!player.paused()) {
+        videoStateRef.update({
+          currentTime: player.currentTime(),
+          currentUrl: Vlink.value,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        });
+      }
+    });
+
+    player.on('ended', () => {
+      toggleUrlBarVisibility(false);
+    });
+
+    function changelink(){
+      const newUrl = Vlink.value;
+      Cvid.setAttribute('src', newUrl);
+      player.src({ type: 'video/mp4', src: newUrl });
+      player.load();
+      
+      // Update Firebase with new URL
+      videoStateRef.update({
+        currentUrl: newUrl,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      });
+    }
+
+    // Initialize emoji picker
     const commonEmojis = [
       '😊', '😂', '❤️', '👍', '👋', '🎉', '🔥', '💯',
       '😍', '😎', '🤔', '😢', '😡', '🤣', '🙏', '👏',
-      '🎮', '🎵', '🎬', '📚', '🎨', '⚽', '🎸', '🎯'
+      '🎮', '🎵', '🎬', '📚', '🎨', '⚽', '��', '🎯'
     ];
 
-    // Initialize emoji picker
     commonEmojis.forEach(emoji => {
       const emojiItem = document.createElement('div');
       emojiItem.className = 'emoji-item';
@@ -268,143 +688,11 @@
         }
       }
     });
-    
-    // Listen for new chat messages
-    chatRef.on('child_added', (snapshot) => {
-      const message = snapshot.val();
-      console.log('New message received:', message);
-      addMessageToChat(message);
-    });
-    
-    function addMessageToChat(message) {
-      console.log('Adding message to chat:', message);
-      const messageElement = document.createElement('div');
-      messageElement.className = 'message';
-      
-      // Parse emojis in the message
-      const parsedText = twemoji.parse(message.text, {
-        folder: 'svg',
-        ext: '.svg'
-      });
-      
-      messageElement.innerHTML = `
-        <span class="sender">${message.sender}:</span>
-        <span class="text">${parsedText}</span>
-        <span class="time">${new Date(message.timestamp).toLocaleTimeString()}</span>
-      `;
-      chatMessages.appendChild(messageElement);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-    
-    function sendMessage() {
-      const text = chatInput.value.trim();
-      console.log('Sending message:', text);
-      if (text) {
-        chatRef.push({
-          text,
-          sender: userId,
-          timestamp: firebase.database.ServerValue.TIMESTAMP
-        }).then(() => {
-          console.log('Message sent successfully');
-        }).catch((error) => {
-          console.error('Error sending message:', error);
-        });
-        chatInput.value = '';
-        
-        // Mark user as not typing
-        typingRef.child(userId).set({
-          typing: false,
-          timestamp: firebase.database.ServerValue.TIMESTAMP
-        });
-      }
-    }
-    
-    // Allow sending message with Enter key
-    chatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        sendMessage();
-      }
-    });
-    
-    // Listen for changes in video state and URL
-    videoStateRef.on('value', (snapshot) => {
-      const data = snapshot.val();
-      console.log('Received sync data:', data);
-      if (data) {
-        // Sync URL if different
-        if (data.currentUrl && data.currentUrl !== Vlink.value) {
-          console.log('Syncing URL to:', data.currentUrl);
-          Vlink.value = data.currentUrl;
-          Cvid.setAttribute('src', data.currentUrl);
-          player.src({ type: 'video/mp4', src: data.currentUrl });
-          player.load();
-        }
 
-        // Only update if the change is from another client
-        if (Math.abs(player.currentTime() - data.currentTime) > 1) {
-          console.log('Syncing time to:', data.currentTime);
-          player.currentTime(data.currentTime);
-        }
-        
-        if (data.isPlaying && player.paused()) {
-          console.log('Syncing play state');
-          player.play();
-        } else if (!data.isPlaying && !player.paused()) {
-          console.log('Syncing pause state');
-          player.pause();
-        }
-      }
-    });
-
-    // Update Firebase when video state changes
-    player.on('play', () => {
-      videoStateRef.update({
-        isPlaying: true,
-        currentTime: player.currentTime(),
-        currentUrl: Vlink.value,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      });
-    });
-
-    player.on('pause', () => {
-      videoStateRef.update({
-        isPlaying: false,
-        currentTime: player.currentTime(),
-        currentUrl: Vlink.value,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      });
-    });
-
-    player.on('seeked', () => {
-      videoStateRef.update({
-        currentTime: player.currentTime(),
-        currentUrl: Vlink.value,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      });
-    });
-
-    player.on('timeupdate', () => {
-      // Only update if the video is playing
-      if (!player.paused()) {
-        videoStateRef.update({
-          currentTime: player.currentTime(),
-          currentUrl: Vlink.value,
-          timestamp: firebase.database.ServerValue.TIMESTAMP
-        });
-      }
-    });
-
-    function changelink(){
-      const newUrl = Vlink.value;
-      Cvid.setAttribute('src', newUrl);
-      player.src({ type: 'video/mp4', src: newUrl });
-      player.load();
-      
-      // Update Firebase with new URL
-      videoStateRef.update({
-        currentUrl: newUrl,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-      });
+    // Add this new function for toggling the URL form
+    function toggleUrlForm() {
+      const form = document.getElementById('urlForm');
+      form.classList.toggle('hidden');
     }
   </script>
   </body>
